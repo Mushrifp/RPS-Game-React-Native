@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 
 const GamePage = () => {
-  return (
+  return (         
     <View>
       <Text>GamePage</Text>
     </View>
