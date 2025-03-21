@@ -12,7 +12,7 @@ import { useFonts } from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
-const HomePage = () => {
+const HomePage = ({navigation}) => {
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
@@ -23,7 +23,7 @@ const HomePage = () => {
 
   return (
     <LinearGradient colors={["black", "#505857"]} style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar backgroundColor={"black"} />
 
       {/* Title */}
       <View style={styles.titleContainer}>
@@ -33,7 +33,7 @@ const HomePage = () => {
       </View>
 
       {/* Start Button */}
-      <TouchableOpacity style={styles.startButton}>
+      <TouchableOpacity style={styles.startButton} onPress={()=> navigation.navigate("Game")}>
         <LinearGradient
           colors={["black", "black"]}
           style={styles.buttonGradient}
