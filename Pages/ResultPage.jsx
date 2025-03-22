@@ -6,18 +6,36 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
-const GamePage = () => {
-  const navigation = useNavigation()
+const ResultPage = () => {
+  const navigation = useNavigation();
+  const images = [require('../assets/rock.png'),require("../assets/paper.png"),require("../assets/scissor.png")]
+  const [index, setIndex] = useState(0);
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setIndex(prev => (prev + 1) % images.length);
+    }, 500);
+  
+    let stopTimer = setTimeout(() => {
+      clearInterval(timer);
+    }, 3000);
+  
+    return () => {
+      clearInterval(timer);
+      clearTimeout(stopTimer);
+    };
+  }, []);
+  
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
@@ -25,7 +43,7 @@ const GamePage = () => {
 
   const handlePress = (choice) => {
     console.log(`User selected: ${choice}`);
-    navigation.navigate("Result")
+    navigation.navigate("Result");
   };
 
   return (
@@ -33,16 +51,8 @@ const GamePage = () => {
       <Text style={styles.selectText}>Select Yours</Text>
 
       <View style={styles.choicesContainer}>
-        <Pressable onPress={() => handlePress("Rock")}>
-          <Image source={require("../assets/rock.png")} style={styles.choiceImg} />
-        </Pressable>
-
         <Pressable onPress={() => handlePress("Paper")}>
-          <Image source={require("../assets/paper.png")} style={styles.choiceImg} />
-        </Pressable>
-
-        <Pressable onPress={() => handlePress("Scissors")}>
-          <Image source={require("../assets/scissor.png")} style={styles.choiceImg} />
+          <Image source={images[index]} style={styles.choiceImg} />
         </Pressable>
       </View>
     </LinearGradient>
@@ -62,16 +72,17 @@ const styles = StyleSheet.create({
   },
   choicesContainer: {
     position: "absolute",
-    bottom: height * 0.00,
+    bottom: height * 0.0,
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: width * 0.10,
-    width: "110%", 
+    paddingHorizontal: width * 0.1,
+    width: "110%",
   },
   choiceImg: {
-    width: width * 0.30, 
-    height: height * 0.24, 
+    width: width * 0.3,
+    height: height * 0.24,
     resizeMode: "contain",
   },
 });
-export default GamePage;
+
+export default ResultPage;

@@ -23,11 +23,10 @@ const HomePage = ({navigation}) => {
 
   return (
     <LinearGradient colors={["black", "#505857"]} style={styles.container}>
-      <StatusBar backgroundColor={"black"} />
 
       {/* Title */}
       <View style={styles.titleContainer}>
-        <Text style={[styles.rpsText, { color: "white" }]}>Rock</Text>
+        <Text style={[styles.rpsText, { color: "white" }]}>Rock </Text>
         <Text style={[styles.rpsText, { color: "white" }]}>Paper</Text>
         <Text style={[styles.rpsText, { color: "white" }]}>Scissor</Text>
       </View>
