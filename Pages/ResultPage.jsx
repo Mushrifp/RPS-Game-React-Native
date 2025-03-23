@@ -27,7 +27,9 @@ const ResultPage = () => {
 
   const choices = ["Rock", "Paper", "Scissors"];
   const [indexBot, setIndexBot] = useState(0);
+  const [count, setCount] = useState(3);
   const [result, setResult] = useState("Waiting For Bot to Select...");
+  let countValue = 3
 
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
@@ -36,12 +38,18 @@ const ResultPage = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       setIndexBot(Math.floor(Math.random() * 3));
-    }, 150);
+    }, 200);
+
+    let countTimer = setInterval(()=>{
+      countValue--
+      setCount(countValue)
+    },1000)
 
     let stopTimer = setTimeout(() => {
       clearInterval(timer);
+      clearInterval(countTimer)
       resultCalculate();
-    }, 2000);
+    }, 3015);
 
     return () => {
       clearInterval(timer);
@@ -50,7 +58,7 @@ const ResultPage = () => {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Prevent layout shift
+    return null; 
   }
 
   const resultCalculate = () => {
@@ -66,7 +74,7 @@ const ResultPage = () => {
     setResult(outcomes[userValue]?.[botChoice] || "It's a Draw");
   };
 
-  return (
+  return ( 
     <LinearGradient colors={["black", "black"]} style={styles.container}>
       {/* Top Image (Bot's Choice) */}
       <Image
@@ -75,7 +83,11 @@ const ResultPage = () => {
       />
 
       {/* Centered Result Text */}
-      <Text style={styles.selectText}>{result}</Text>
+      <Text style={styles.selectText}>
+          {result} 
+          {count === 0 ? " " : <Text style={styles.countText}>{count}</Text>}
+       </Text>
+
 
       {/* Bottom Image (User's Choice) */}
       <View style={styles.choicesContainer}>
@@ -115,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.1,
     textAlign: "center",
     position: "absolute",
-    top: "53%",
+    top: "50%",
     transform: [{ translateY: -height * 0.05 }],
   },
   choicesContainer: {
@@ -160,6 +172,12 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
+  countText: {
+    color: "red",
+    fontWeight: "bold",
+    fontSize:width * 0.15
+  },
+  
 });
 
 export default ResultPage;
