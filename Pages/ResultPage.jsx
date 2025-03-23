@@ -27,7 +27,7 @@ const ResultPage = () => {
 
   const choices = ["Rock", "Paper", "Scissors"];
   const [indexBot, setIndexBot] = useState(0);
-  const [result, setResult] = useState("Waiting...");
+  const [result, setResult] = useState("Waiting For Bot to Select...");
 
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
@@ -36,7 +36,7 @@ const ResultPage = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       setIndexBot(Math.floor(Math.random() * 3));
-    }, 100);
+    }, 150);
 
     let stopTimer = setTimeout(() => {
       clearInterval(timer);
