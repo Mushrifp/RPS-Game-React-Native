@@ -5,55 +5,99 @@ import {
   Pressable,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+import { contextVariable } from "../Context/Context";
 
 const { width, height } = Dimensions.get("window");
 
 const ResultPage = () => {
   const navigation = useNavigation();
-  const images = [require('../assets/rock.png'),require("../assets/paper.png"),require("../assets/scissor.png")]
-  const [index, setIndex] = useState(0);
+  const { userValue } = useContext(contextVariable);
+
+  const images = {
+    Rock: require("../assets/rock.png"),
+    Paper: require("../assets/paper.png"),
+    Scissors: require("../assets/scissor.png"),
+  };
+
+  const choices = ["Rock", "Paper", "Scissors"];
+  const [indexBot, setIndexBot] = useState(0);
+  const [result, setResult] = useState("Waiting...");
+
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
 
   useEffect(() => {
     let timer = setInterval(() => {
-      setIndex(prev => (prev + 1) % images.length);
-    }, 500);
-  
+      setIndexBot(Math.floor(Math.random() * 3));
+    }, 100);
+
     let stopTimer = setTimeout(() => {
       clearInterval(timer);
-    }, 3000);
-  
+      resultCalculate();
+    }, 2000);
+
     return () => {
       clearInterval(timer);
       clearTimeout(stopTimer);
     };
   }, []);
-  
 
   if (!fontsLoaded) {
-    return <Text>Loading...</Text>;
+    return null; // Prevent layout shift
   }
 
-  const handlePress = (choice) => {
-    console.log(`User selected: ${choice}`);
-    navigation.navigate("Result");
+  const resultCalculate = () => {
+    const botChoice = choices[Math.floor(Math.random() * 3)];
+    setIndexBot(choices.indexOf(botChoice));
+
+    const outcomes = {
+      Rock: { Scissors: "You Won", Paper: "You Lost" },
+      Paper: { Rock: "You Won", Scissors: "You Lost" },
+      Scissors: { Paper: "You Won", Rock: "You Lost" },
+    };
+
+    setResult(outcomes[userValue]?.[botChoice] || "It's a Draw");
   };
 
   return (
-    <LinearGradient colors={["black", "#505857"]} style={styles.container}>
-      <Text style={styles.selectText}>Select Yours</Text>
+    <LinearGradient colors={["black", "black"]} style={styles.container}>
+      {/* Top Image (Bot's Choice) */}
+      <Image
+        source={images[choices[indexBot]]}
+        style={[styles.choiceImg, styles.topImage]}
+      />
 
+      {/* Centered Result Text */}
+      <Text style={styles.selectText}>{result}</Text>
+
+      {/* Bottom Image (User's Choice) */}
       <View style={styles.choicesContainer}>
-        <Pressable onPress={() => handlePress("Paper")}>
-          <Image source={images[index]} style={styles.choiceImg} />
+        <Pressable>
+          <Image source={images[userValue]} style={styles.choiceImg} />
         </Pressable>
+
+        {result !== "Waiting..." && (
+          <TouchableOpacity
+            style={styles.resetButton}
+            onPress={() => navigation.navigate("Game")}
+          >
+            <LinearGradient
+              colors={["#FF4E50", "#FC913A", "#F9D423"]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.buttonGradient}
+            >
+              <Text style={styles.resetButtonText}>Play again</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
     </LinearGradient>
   );
@@ -63,25 +107,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   selectText: {
     fontFamily: "LuckiestGuy",
     color: "white",
     fontSize: width * 0.1,
-    marginTop: height * 0.35,
+    textAlign: "center",
+    position: "absolute",
+    top: "53%",
+    transform: [{ translateY: -height * 0.05 }],
   },
   choicesContainer: {
     position: "absolute",
     bottom: height * 0.0,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: width * 0.1,
-    width: "110%",
   },
   choiceImg: {
-    width: width * 0.3,
-    height: height * 0.24,
+    width: width * 0.5,
+    height: height * 0.33,
     resizeMode: "contain",
+  },
+  topImage: {
+    position: "absolute",
+    top: height * 0.0,
+    transform: [{ rotate: "180deg" }],
+  },
+  resetButton: {
+    position: "absolute",
+    bottom: height * 0.03,
+    zIndex: 10,
+    borderRadius: 30,
+    overflow: "hidden",
+    alignSelf: "center",
+    width: width * 0.7,
+  },
+  buttonGradient: {
+    paddingVertical: height * 0.02,
+    paddingHorizontal: width * 0.05,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+    width: "100%",
+  },
+  resetButtonText: {
+    fontFamily: "LuckiestGuy",
+    fontSize: width * 0.07,
+    color: "#fff",
+    textAlign: "center",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
 });
 

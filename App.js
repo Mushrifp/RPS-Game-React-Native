@@ -4,6 +4,8 @@ import HomePage from './Pages/HomePage';
 import GamePage from './Pages/GamePage';
 import { StatusBar } from 'react-native';
 import ResultPage from './Pages/ResultPage'
+import Context from './Context/Context';
+
 
 
 const Stack = createStackNavigator()
@@ -11,6 +13,7 @@ const Stack = createStackNavigator()
 export default function App() {
   return (
     <>
+    <Context>
        <NavigationContainer>
        <StatusBar backgroundColor={"black"} />
            <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown:false}}>               
@@ -21,6 +24,7 @@ export default function App() {
            
            </Stack.Navigator>
        </NavigationContainer>
+    </Context>
     </>
   );
 }

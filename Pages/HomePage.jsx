@@ -2,45 +2,85 @@ import {
   View,
   Text,
   StyleSheet,
-  StatusBar,
   TouchableOpacity,
   Dimensions,
+  Animated,
+  Easing,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
-const HomePage = ({navigation}) => {
+const HomePage = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
 
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>;
-  }
+  const floatAnim = useRef(new Animated.Value(0)).current;
 
-  return (
-    <LinearGradient colors={["black", "#505857"]} style={styles.container}>
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: 10,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
 
-      {/* Title */}
-      <View style={styles.titleContainer}>
-        <Text style={[styles.rpsText, { color: "white" }]}>Rock </Text>
-        <Text style={[styles.rpsText, { color: "white" }]}>Paper</Text>
-        <Text style={[styles.rpsText, { color: "white" }]}>Scissor</Text>
-      </View>
+  return fontsLoaded ? (
+    <LinearGradient
+      colors={["black", "black", "black", "black", "grey"]}
+      style={styles.container}
+    >
+      {/* Floating Title */}
+      <Animated.View
+        style={[
+          styles.titleContainer,
+          { transform: [{ translateY: floatAnim }] },
+        ]}
+      >
+        <Text style={[styles.rpsText, { transform: [{ rotate: "-10deg" }] }]}>
+          Rock
+        </Text>
+        <Text style={[styles.rpsText, { transform: [{ rotate: "3deg" }] }]}>
+          Paper
+        </Text>
+        <Text style={[styles.rpsText, { transform: [{ rotate: "-10deg" }] }]}>
+          Scissor
+        </Text>
+      </Animated.View>
 
       {/* Start Button */}
-      <TouchableOpacity style={styles.startButton} onPress={()=> navigation.navigate("Game")}>
+      <TouchableOpacity
+        style={styles.startButton}
+        onPress={() => navigation.navigate("Game")}
+      >
         <LinearGradient
-          colors={["black", "black"]}
+          colors={["#FF4E50", "#FC913A", "#F9D423"]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
           style={styles.buttonGradient}
         >
           <Text style={styles.startButtonText}>START BOP!</Text>
         </LinearGradient>
       </TouchableOpacity>
     </LinearGradient>
+  ) : (
+    <View style={styles.loadingContainer}>
+      <Text>Loading...</Text>
+    </View>
   );
 };
 
@@ -49,21 +89,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "black",
+  },
   titleContainer: {
     alignItems: "center",
     position: "absolute",
-    top: height * 0.25,
+    top: height * 0.3,
   },
   rpsText: {
     fontSize: width * 0.2,
     fontFamily: "LuckiestGuy",
     textShadowColor: "#000",
+    color: "white",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 5,
   },
   startButton: {
     position: "absolute",
-    bottom: height * 0.12,
+    bottom: height * 0.05,
     borderRadius: 30,
     overflow: "hidden",
     transform: [{ scale: 1.1 }],
