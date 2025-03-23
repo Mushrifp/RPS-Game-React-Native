@@ -38,7 +38,7 @@ const ResultPage = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       setIndexBot(Math.floor(Math.random() * 3));
-    }, 200);
+    }, 50);
 
     let countTimer = setInterval(()=>{
       countValue--
