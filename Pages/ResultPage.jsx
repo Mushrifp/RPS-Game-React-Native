@@ -34,6 +34,16 @@ const ResultPage = () => {
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
 
+   useEffect(()=>{
+        if(result === "You Won"){
+            playAudio("won")
+        }else if(result === "You Lost"){
+          playAudio("lost")
+        }else if(result === "It's a Draw"){
+          playAudio("draw")
+        }
+   },[result])
+
   useEffect(() => {
     playAudio("loading")
     let timer = setInterval(() => {
