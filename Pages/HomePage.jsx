@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
+import { playAudio } from "../Utils/sound";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,6 +40,11 @@ const HomePage = ({ navigation }) => {
     ).start();
   }, []);
 
+  const handleButtonClick = ()=>{
+    playAudio("click")
+    navigation.replace("Game")
+  }
+
   return fontsLoaded ? (
     <LinearGradient
       colors={["black", "black", "black", "black", "grey"]}
@@ -65,7 +71,7 @@ const HomePage = ({ navigation }) => {
       {/* Start Button */}
       <TouchableOpacity
         style={styles.startButton}
-        onPress={() => navigation.replace("Game")}
+        onPress={handleButtonClick}
       >
         <LinearGradient
           colors={["#FF4E50", "#FC913A", "#F9D423"]}

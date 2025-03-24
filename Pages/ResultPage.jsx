@@ -12,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import { contextVariable } from "../Context/Context";
+import { playAudio } from "../Utils/sound";
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,29 +28,22 @@ const ResultPage = () => {
 
   const choices = ["Rock", "Paper", "Scissors"];
   const [indexBot, setIndexBot] = useState(0);
-  const [count, setCount] = useState(3);
   const [result, setResult] = useState("Waiting For Bot to Select...");
-  let countValue = 3
 
   const [fontsLoaded] = useFonts({
     LuckiestGuy: require("../assets/fonts/LuckiestGuy-Regular.ttf"),
   });
 
   useEffect(() => {
+    playAudio("loading")
     let timer = setInterval(() => {
       setIndexBot(Math.floor(Math.random() * 3));
     }, 50);
 
-    let countTimer = setInterval(()=>{
-      countValue--
-      setCount(countValue)
-    },1000)
-
     let stopTimer = setTimeout(() => {
       clearInterval(timer);
-      clearInterval(countTimer)
       resultCalculate();
-    }, 3015);
+    }, 2500);
 
     return () => {
       clearInterval(timer);
@@ -74,31 +68,31 @@ const ResultPage = () => {
     setResult(outcomes[userValue]?.[botChoice] || "It's a Draw");
   };
 
+  const handleButtonClick = ()=>{
+    playAudio("click")
+    navigation.replace("Game")
+  }
+
   return ( 
     <LinearGradient colors={["black", "black"]} style={styles.container}>
-      {/* Top Image (Bot's Choice) */}
       <Image
         source={images[choices[indexBot]]}
         style={[styles.choiceImg, styles.topImage]}
       />
 
-      {/* Centered Result Text */}
       <Text style={styles.selectText}>
           {result} 
-          {count === 0 ? " " : <Text style={styles.countText}>{count}</Text>}
        </Text>
 
-
-      {/* Bottom Image (User's Choice) */}
       <View style={styles.choicesContainer}>
         <Pressable>
           <Image source={images[userValue]} style={styles.choiceImg} />
         </Pressable>
 
-        {result !== "Waiting..." && (
+        {result !== "Waiting For Bot to Select..." && (
           <TouchableOpacity
             style={styles.resetButton}
-            onPress={() => navigation.replace("Game")}
+            onPress={handleButtonClick}
           >
             <LinearGradient
               colors={["#FF4E50", "#FC913A", "#F9D423"]}

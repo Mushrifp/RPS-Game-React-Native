@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 import { contextVariable } from "../Context/Context";
+import { playAudio } from "../Utils/sound";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ const GamePage = () => {
 
   const handlePress = (choice) => {
     setUserValue(choice);
+    playAudio("click")
     navigation.replace("Result");
   };
 
@@ -53,6 +55,7 @@ const GamePage = () => {
       ])
     ).start();
   }, []);
+
 
   return (
     <LinearGradient colors={["black", "black"]} style={styles.container}>
