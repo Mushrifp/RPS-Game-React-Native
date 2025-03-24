@@ -98,7 +98,7 @@ const ResultPage = () => {
         {result !== "Waiting..." && (
           <TouchableOpacity
             style={styles.resetButton}
-            onPress={() => navigation.navigate("Game")}
+            onPress={() => navigation.replace("Game")}
           >
             <LinearGradient
               colors={["#FF4E50", "#FC913A", "#F9D423"]}

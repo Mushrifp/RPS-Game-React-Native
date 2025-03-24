@@ -30,7 +30,7 @@ const GamePage = () => {
 
   const handlePress = (choice) => {
     setUserValue(choice);
-    navigation.navigate("Result");
+    navigation.replace("Result");
   };
 
   const floatAnim = useRef(new Animated.Value(0)).current;
