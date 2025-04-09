@@ -7,6 +7,8 @@ import GamePage from "./Pages/GamePage";
 import ResultPage from "./Pages/ResultPage";
 import Context from "./Context/Context";
 
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
